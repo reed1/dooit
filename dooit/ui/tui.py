@@ -23,6 +23,7 @@ PRINTABLE = (
 
 class Dooit(App):
     CSS_PATH = CssManager().css_file
+    ENABLE_COMMAND_PALETTE = False
 
     SCREENS = {
         "help": HelpScreen,
