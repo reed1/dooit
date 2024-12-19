@@ -8,6 +8,9 @@ def update_children_to_pending(_, connection, target: Todo):
     if not target.pending:
         return
 
+    if any(todo.pending for todo in target.todos):
+        return
+
     query = update(Todo).where(Todo.parent_todo_id == target.id).values(pending=True)
     connection.execute(query)
 
