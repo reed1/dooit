@@ -7,7 +7,7 @@ from ..todo import Todo
 def update_children_to_pending(_, connection, target: Todo):
     if not target.pending:
         return
-        
+
     to_update = []
 
     def update_children(todo: Todo):
@@ -24,7 +24,7 @@ def update_children_to_pending(_, connection, target: Todo):
 def update_children_to_completed(_, connection, target: Todo):
     if target.pending:
         return
-        
+
     to_update = []
 
     def update_children(todo: Todo):
@@ -41,7 +41,7 @@ def update_children_to_completed(_, connection, target: Todo):
 def update_parent_to_pending(mapper, connection, target: Todo):
     if not target.pending:
         return
-        
+
     to_update = []
 
     def update_parent_pending(todo: Todo):
@@ -57,11 +57,11 @@ def update_parent_to_pending(mapper, connection, target: Todo):
     connection.execute(query)
 
 
-@event.listens_for(Todo, "before_update") 
+@event.listens_for(Todo, "before_update")
 def update_parent_to_completed(mapper, connection, target: Todo):
     if target.pending:
         return
-        
+
     to_update = []
 
     def update_parent_completed(todo: Todo):
