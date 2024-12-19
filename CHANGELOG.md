@@ -12,9 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - special function `dooit_setup` that always runs on startup
 - vars `always_expand_workspaces` and `always_expand_todos`
 
+### Fixed
+- Pending status getting resetted on sibling addition (#222)
+
 ### Changed
 
-- `dev only` Auto handling for order_index
+- `dev only` We can now set order index arbitrarily and the todo position will adjust itself
 
 ## 3.1.0
 
