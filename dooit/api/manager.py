@@ -10,6 +10,20 @@ class Manager:
     Class for managing sqlalchemy sessions
     """
 
+    def connect_from_path(self, path: Optional[str] = None):
+        """
+        Connect to database using a file path
+
+        Args:
+            path: Path to SQLite database file. Can include ~ for home directory.
+        """
+        if not path:
+            return self.connect()
+
+        expanded_path = os.path.expanduser(path)
+        conn_string = f"sqlite:///{expanded_path}"
+        self.connect(conn_string)
+
     def connect(self, conn: Optional[str] = None):
         from dooit.api import BaseModel
 

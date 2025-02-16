@@ -7,14 +7,16 @@ OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
 VERSION = "3.1.0"
 
 
-def run_dooit(config: Optional[Path] = None):
-    if config and not (config.exists() and config.is_file()):
+def run_dooit(config: Optional[str] = None, db_path: Optional[str] = None):
+    config_path = None if not config else Path(config)
+
+    if config_path and not (config_path.exists() and config_path.is_file()):
         print(f"Config file {config} not found.")
         return
 
     from dooit.ui.tui import Dooit
 
-    Dooit(config=config).run()
+    Dooit(config=config_path, db_path=db_path).run()
 
 
 @click.group(
@@ -28,8 +30,9 @@ def run_dooit(config: Optional[Path] = None):
     help="Show version and exit.",
 )
 @click.option("-c", "--config", default=None, help="Path to config file.")
+@click.option("--db", default=None, help="Database path")
 @click.pass_context
-def main(ctx, version: bool, config: str) -> None:
+def main(ctx, version: bool, config: str, db: str) -> None:
     if version:
         return print(f"dooit - {VERSION}")
 
@@ -43,10 +46,7 @@ def main(ctx, version: bool, config: str) -> None:
             )
             return
 
-        if config:
-            run_dooit(Path(config).expanduser())
-        else:
-            run_dooit()
+        run_dooit(config=config, db_path=db)
 
 
 @main.command(help="Migrate data from v2 to v3.")

@@ -36,13 +36,13 @@ class Dooit(App):
 
     def __init__(
         self,
-        connection_string: Optional[str] = None,
+        db_path: Optional[str] = None,
         config: Optional[Path] = None,
     ):
         super().__init__(watch_css=True)
         self.dooit_mode: ModeType = "NORMAL"
         self.config = config
-        manager.connect(connection_string)
+        manager.connect_from_path(db_path)
 
     async def base_setup(self):
         self.api = DooitAPI(self)
