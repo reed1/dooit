@@ -221,10 +221,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         for i in self._options:
             assert i.id is not None
             new_prompt = self._renderers[i.id].prompt
-            if i.prompt != new_prompt:
-                i.set_prompt(self._renderers[i.id].prompt)
-
-        self._refresh_lines()
+            self.replace_option_prompt(i.id, new_prompt)
 
     def _get_parent(self, id: str) -> Optional[ModelType]:
         raise NotImplementedError  # pragma: no cover
