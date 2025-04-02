@@ -248,7 +248,7 @@ class BarNotification(DooitEvent):
         self.auto_exit = auto_exit
 
 
-class _QuitApp(DooitEvent):
+class QuitApp(DooitEvent):
     """
     Internally used Quit Event
     """

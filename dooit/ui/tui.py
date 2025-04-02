@@ -3,7 +3,7 @@ from typing import Optional
 from textual import on
 from textual.app import App
 from textual.binding import Binding
-from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, _QuitApp
+from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, QuitApp
 from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
@@ -105,7 +105,7 @@ class Dooit(App):
             if todos_tree:
                 todos_tree.refresh_options()
 
-    @on(_QuitApp)
+    @on(QuitApp)
     async def quit_app(self):
         await self.action_quit()
 
