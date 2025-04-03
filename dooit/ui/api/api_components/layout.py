@@ -17,7 +17,7 @@ class LayoutManager(ApiComponent):
     @todo_layout.setter
     def todo_layout(self, layout: TodoLayout):
         self._todo_layout = layout
-        for tree in self.app.query(TodosTree):
+        for tree in self.app.screen.query(TodosTree):
             tree.refresh_options()
 
     @property
@@ -27,5 +27,5 @@ class LayoutManager(ApiComponent):
     @workspace_layout.setter
     def workspace_layout(self, layout: WorkspaceLayout):
         self._workspace_layout = layout
-        for tree in self.app.query(WorkspacesTree):
+        for tree in self.app.screen.query(WorkspacesTree):
             tree.refresh_options()

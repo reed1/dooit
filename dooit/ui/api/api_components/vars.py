@@ -55,7 +55,7 @@ class VarManager(ApiComponent):
 
     @property
     def workspaces_tree(self) -> WorkspacesTree:
-        return self.api.app.query_one(WorkspacesTree)
+        return self.api.app.screen.query_one(WorkspacesTree)
 
     @property
     def current_workspace(self) -> Optional[Workspace]:
@@ -67,7 +67,7 @@ class VarManager(ApiComponent):
 
     @property
     def todos_tree(self) -> Optional[TodosTree]:
-        todo_switcher = self.api.app.query_one(
+        todo_switcher = self.api.app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         )
         if todo_switcher.visible_content and isinstance(

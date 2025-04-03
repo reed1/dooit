@@ -64,22 +64,22 @@ class Dooit(App):
 
     @property
     def workspace_tree(self) -> WorkspacesTree:
-        return self.query_one(WorkspacesTree)
+        return self.screen.query_one(WorkspacesTree)
 
     @property
     def bar(self) -> StatusBar:
-        return self.query_one(BarSwitcher).status_bar
+        return self.screen.query_one(BarSwitcher).status_bar
 
     @property
     def bar_switcher(self) -> BarSwitcher:
-        return self.query_one(BarSwitcher)
+        return self.screen.query_one(BarSwitcher)
 
     def get_dooit_mode(self) -> ModeType:
         return self.dooit_mode
 
     async def poll_dooit_db(self):  # pragma: no cover
         def refresh_all_trees():
-            trees = self.query(ModelTree)
+            trees = self.screen.query(ModelTree)
             for tree in trees:
                 tree.force_refresh()
 

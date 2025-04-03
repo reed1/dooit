@@ -29,7 +29,7 @@ async def test_workspaces_tree():
 
         await pilot.pause()
 
-        current = app.query_one(
+        current = app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
@@ -83,7 +83,7 @@ async def test_workspace_remove_cancelled():
 
         w1 = wtree.current_model
 
-        current = app.query_one(
+        current = app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
@@ -95,7 +95,7 @@ async def test_workspace_remove_cancelled():
         await pilot.pause()
 
         w2 = wtree.current_model
-        current = app.query_one(
+        current = app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
@@ -117,7 +117,7 @@ async def test_workspace_remove():
 
         w1 = wtree.current_model
 
-        current = app.query_one(
+        current = app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
@@ -129,7 +129,7 @@ async def test_workspace_remove():
         await pilot.pause()
 
         w2 = wtree.current_model
-        current = app.query_one(
+        current = app.screen.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None

@@ -13,4 +13,4 @@ class DashboardManager(ApiComponent):
         self.app = app
 
     def set(self, items: List[TextType]):
-        self.app.query_one(Dashboard).items = items
+        self.app.screen.query_one(Dashboard).items = items
