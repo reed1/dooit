@@ -60,4 +60,3 @@ def update_due_for_recurrence(mapper, connection, todo: Todo):
 
     todo.pending = True
     todo.due += todo.recurrence
-

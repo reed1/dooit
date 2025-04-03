@@ -24,7 +24,9 @@ async def create_and_move_to_todo(pilot: Pilot) -> TodosTree:
     app.api.switch_focus()
     await pilot.pause()
 
-    tree = app.screen.query_one("#todo_switcher", expect_type=ContentSwitcher).visible_content
+    tree = app.screen.query_one(
+        "#todo_switcher", expect_type=ContentSwitcher
+    ).visible_content
     assert isinstance(tree, TodosTree)
 
     return tree
