@@ -20,8 +20,11 @@ class Manager:
         if not path:
             return self.connect()
 
-        expanded_path = os.path.expanduser(path)
-        conn_string = f"sqlite:///{expanded_path}"
+        # XXX: Do a better job
+        if path != ":memory:":
+            path = os.path.expanduser(path)
+
+        conn_string = f"sqlite:///{path}"
         self.connect(conn_string)
 
     def connect(self, conn: Optional[str] = None):
