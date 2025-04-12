@@ -9,7 +9,6 @@ from textual.css.query import NoMatches
 
 from dooit.ui.api.event_handlers import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.api.events import DooitEvent
-from dooit.ui.api.events.events import Startup
 from .loader import load_file
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -45,13 +44,10 @@ class PluginManager:
 
         load_file(self, self.config)
 
-    def _update_dooit_value(self, obj: Callable, *params):
-        if obj.__name__ == "dooit_setup":
-            res = obj(self.api)
-        else:
-            res = obj(self.api, *params)
-
+    def _update_dooit_value(self, obj, *params):
+        res = obj(self.api, *params)
         setattr(obj, "__dooit_value", res)
+
         try:
             if bar := getattr(self.app, "bar", None):
                 bar.refresh()
@@ -83,6 +79,3 @@ class PluginManager:
 
         if getattr(obj, DOOIT_TIMER_ATTR, None):
             return self._register_timer(obj)
-
-        if callable(obj) and obj.__name__ == "dooit_setup":
-            return self._register_events([Startup], obj)
