@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- special function `dooit_setup` that always runs on startup
 - vars `always_expand_workspaces` and `always_expand_todos`
+- Support for latest textual
 
 ### Fixed
 - Pending status getting resetted on sibling addition (#222)
