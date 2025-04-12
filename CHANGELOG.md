@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - vars `always_expand_workspaces` and `always_expand_todos`
-- Support for latest textual
+- Support for latest textual (#229)
+- Add support for using custom database for todos (#224)
 
 ### Fixed
 - Pending status getting resetted on sibling addition (#222)
+- Child task status reset when editing parent task (#227)
 
 ### Changed
 
