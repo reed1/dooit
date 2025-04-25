@@ -1,69 +1,50 @@
 from dooit.api.workspace import Workspace
-from tests.test_core.core_base import CoreTestBase
+from tests.test_core.core_base import *  # noqa
 
 
-class TestModel(CoreTestBase):
-    # Using Workspace as an example because Model is an abstract class
+def test_creation_and_deletion(create_workspace):
+    w = create_workspace()
+    assert len(Workspace.all()) == 1
 
-    def test_creation_and_deletion(self):
-        w = Workspace()
-        w.save()
-        assert len(Workspace.all()) == 1
+    w.drop()
+    assert len(Workspace.all()) == 0
 
-        w.drop()
-        assert len(Workspace.all()) == 0
 
-    def test_shifts_normal(self):
-        for _ in range(5):
-            w = Workspace()
-            w.save()
+def test_shifts_normal(create_workspace):
+    workspace = [create_workspace() for _ in range(5)][0]
+    assert workspace is not None
 
-        workspace = Workspace.all()[0]
+    siblings = workspace.siblings
+    assert workspace.is_first_sibling()
 
-        assert workspace is not None
+    workspace.shift_down()
+    siblings = workspace.siblings
+    assert siblings[1].id == workspace.id
 
-        siblings = workspace.siblings
-        assert workspace.is_first_sibling()
+    workspace.shift_up()
+    siblings = workspace.siblings
+    assert siblings[0].id == workspace.id
+    assert workspace.is_first_sibling()
 
-        workspace.shift_down()
-        siblings = workspace.siblings
-        assert siblings[1].id == workspace.id
 
-        workspace.shift_up()
-        siblings = workspace.siblings
-        assert siblings[0].id == workspace.id
-        assert workspace.is_first_sibling()
+def test_shifts_edge(create_workspace):
+    workspaces = [create_workspace() for _ in range(5)]
 
-    def test_shifts_edge(self):
-        for _ in range(5):
-            w = Workspace()
-            w.save()
+    assert not workspaces[0].shift_up()
+    assert not workspaces[-1].shift_down()
 
-        workspaces = Workspace.all()
 
-        assert not workspaces[0].shift_up()
-        assert not workspaces[-1].shift_down()
+def test_sort_field(create_workspace):
+    names = ["a", "b", "c", "d", "e"][::-1]
+    w = [create_workspace(name) for name in names][0]
 
-    def test_sort_field(self):
-        names = ["a", "b", "c", "d", "e"]
-        workspaces = [Workspace(description=name) for name in names]
-        w = workspaces[0]
+    w.sort_siblings("description")
+    assert [i.description for i in w.siblings] == sorted(names)
 
-        for i in reversed(workspaces):
-            i.save()
 
-        assert [i.description for i in w.siblings] == names[::-1]
-        w.sort_siblings("description")
-        assert [i.description for i in w.siblings] == names
+def test_sort_reverse(create_workspace):
+    names = ["a", "b", "c", "d", "e"]
+    w = [create_workspace(name) for name in names][0]
 
-    def test_sort_reverse(self):
-        names = ["a", "b", "c", "d", "e"]
-        workspaces = [Workspace(description=name) for name in names]
-        w = workspaces[0]
-
-        for i in reversed(workspaces):
-            i.save()
-
-        assert [i.description for i in w.siblings] == names[::-1]
-        w.reverse_siblings()
-        assert [i.description for i in w.siblings] == names
+    w.reverse_siblings()
+    assert [i.description for i in w.siblings] == names[::-1]

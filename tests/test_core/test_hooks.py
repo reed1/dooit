@@ -1,19 +1,10 @@
-from tests.test_core.core_base import CoreTestBase
-from dooit.api import Workspace
+from tests.test_core.core_base import *  # noqa
 
 
-class TestTodo(CoreTestBase):
-    def setUp(self):
-        super().setUp()
-        self.default_workspace = Workspace()
+def test_todo_status_update_children(todo1):
+    assert todo1.is_pending
 
-    def test_todo_status_update_children(self):
-        parent_todo = self.default_workspace.add_todo()
-        child_todos = [parent_todo.add_todo() for _ in range(5)]
+    for child_todo in todo1.todos:
+        child_todo.toggle_complete()
 
-        assert parent_todo.is_pending
-
-        for child_todo in child_todos:
-            child_todo.toggle_complete()
-
-        assert not parent_todo.is_pending
+    assert not todo1.is_pending
