@@ -11,9 +11,9 @@ class TestTodo(CoreTestBase):
         parent_todo = self.default_workspace.add_todo()
         child_todos = [parent_todo.add_todo() for _ in range(5)]
 
-        self.assertTrue(parent_todo.is_pending)
+        assert parent_todo.is_pending
 
         for child_todo in child_todos:
             child_todo.toggle_complete()
 
-        self.assertFalse(parent_todo.is_pending)
+        assert not parent_todo.is_pending

@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from datetime import datetime, timedelta
 from sqlalchemy import select
-from pytest import raises
+from pytest import raises, mark
 from dooit.api.exceptions import NoParentError, MultipleParentError
 from tests.test_core.core_base import CoreTestBase
 from dooit.api import Todo, Workspace
@@ -18,11 +18,10 @@ class TestTodo(CoreTestBase):
             todo.save()
 
         result = Todo.all()
-        self.assertEqual(len(result), 5)
+        assert len(result) == 5
 
         indexs = sorted([t.order_index for t in result])
-
-        self.assertEqual(indexs, [0, 1, 2, 3, 4])
+        assert indexs == [0, 1, 2, 3, 4]
 
     def test_sibling_methods(self):
         for _ in range(5):
@@ -31,14 +30,13 @@ class TestTodo(CoreTestBase):
 
         query = select(Todo)
         todo = self.session.execute(query).scalars().first()
-
         assert todo is not None
 
         siblings = todo.siblings
         index_ids = [w.order_index for w in siblings]
-        self.assertEqual(index_ids, [0, 1, 2, 3, 4])
-        self.assertTrue(siblings[0].is_first_sibling())
-        self.assertTrue(siblings[-1].is_last_sibling())
+        assert index_ids == [0, 1, 2, 3, 4]
+        assert siblings[0].is_first_sibling()
+        assert siblings[-1].is_last_sibling()
 
     def test_todo_siblings_by_creation(self):
         for _ in range(5):
@@ -47,45 +45,37 @@ class TestTodo(CoreTestBase):
 
         query = select(Todo)
         workspace = self.session.execute(query).scalars().first()
-
         assert workspace is not None
-        self.assertEqual(len(workspace.siblings), 5)
+        assert len(workspace.siblings) == 5
 
     def test_parent_kind(self):
         todo = Todo(parent_workspace=self.default_workspace)
         todo.save()
-
-        self.assertFalse(todo.has_same_parent_kind)
+        assert not todo.has_same_parent_kind
 
         todo2 = Todo(parent_todo=todo)
         todo2.save()
-
-        self.assertTrue(todo2.has_same_parent_kind)
+        assert todo2.has_same_parent_kind
 
     def test_without_parent(self):
         todo = Todo()
-
-        with self.assertRaises(NoParentError):
+        with raises(NoParentError):
             todo.save()
 
     def test_with_both_parents(self):
         w = self.default_workspace
         t = w.add_todo()
-
         todo = Todo(parent_workspace=w, parent_todo=t)
-
-        with self.assertRaises(MultipleParentError):
+        with raises(MultipleParentError):
             todo.save()
 
     def test_sibling_add(self):
         t = self.default_workspace.add_todo()
         self.default_workspace.add_todo()
-
         t2 = t.add_sibling()
-
-        self.assertEqual(len(t.siblings), 3)
-        self.assertEqual(len(t2.siblings), 3)
-        self.assertEqual(t2.order_index, 1)
+        assert len(t.siblings) == 3
+        assert len(t2.siblings) == 3
+        assert t2.order_index == 1
 
     def test_comparable_fields(self):
         fields = Todo.comparable_fields()
@@ -97,35 +87,34 @@ class TestTodo(CoreTestBase):
             "urgency",
             "pending",
         ]
-        self.assertEqual(fields, expected_fields)
+        assert fields == expected_fields
 
     def test_nest_level(self):
         t = self.default_workspace.add_todo()
-        self.assertEqual(t.nest_level, 0)
+        assert t.nest_level == 0
 
         t = t.add_todo()
-        self.assertEqual(t.nest_level, 1)
+        assert t.nest_level == 1
 
         t = t.add_todo()
-        self.assertEqual(t.nest_level, 2)
+        assert t.nest_level == 2
 
     def test_from_id(self):
         t = self.default_workspace.add_todo()
         _id = t.id
         t_from_id = Todo.from_id(str(_id))
-
-        self.assertEqual(t_from_id, t)
+        assert t_from_id == t
 
     def test_toggle_complete(self):
         t = self.default_workspace.add_todo()
-        self.assertTrue(t.pending)
-        self.assertTrue(t.is_pending)
-        self.assertFalse(t.is_completed)
+        assert t.pending
+        assert t.is_pending
+        assert not t.is_completed
 
         t.toggle_complete()
-        self.assertFalse(t.pending)
-        self.assertFalse(t.is_pending)
-        self.assertTrue(t.is_completed)
+        assert not t.pending
+        assert not t.is_pending
+        assert t.is_completed
 
     def test_toggle_complete_parent(self):
         t = self.default_workspace.add_todo()
@@ -133,49 +122,49 @@ class TestTodo(CoreTestBase):
         t2 = t.add_todo()
 
         t1.toggle_complete()
-        self.assertFalse(t.is_completed)
+        assert not t.is_completed
 
         t2.toggle_complete()
-        self.assertTrue(t.is_completed)
+        assert t.is_completed
 
         t1.toggle_complete()
-        self.assertFalse(t.is_completed)
+        assert not t.is_completed
 
     def test_due_date_util(self):
         t = self.default_workspace.add_todo()
-        self.assertFalse(t.due)
-        self.assertFalse(t.is_overdue)
-        self.assertFalse(t.is_due_today())
-        self.assertEqual(t.status, "pending")
+        assert not t.due
+        assert not t.is_overdue
+        assert not t.is_due_today()
+        assert t.status == "pending"
 
         t.due = datetime.now()
-        self.assertTrue(t.is_overdue)
-        self.assertTrue(t.due)
-        self.assertTrue(t.is_due_today())
-        self.assertEqual(t.status, "overdue")
+        assert t.is_overdue
+        assert t.due
+        assert t.is_due_today()
+        assert t.status == "overdue"
 
         t.due = datetime.now() - timedelta(days=1)
-        self.assertFalse(t.is_due_today())
-        self.assertTrue(t.is_overdue)
-        self.assertEqual(t.status, "overdue")
+        assert not t.is_due_today()
+        assert t.is_overdue
+        assert t.status == "overdue"
 
         t.due = datetime.now() + timedelta(days=1)
-        self.assertFalse(t.is_overdue)
-        self.assertEqual(t.status, "pending")
+        assert not t.is_overdue
+        assert t.status == "pending"
 
         t.toggle_complete()
-        self.assertEqual(t.status, "completed")
+        assert t.status == "completed"
 
     def test_tags(self):
         t = self.default_workspace.add_todo()
         t.description = "This is a @tag"
-        self.assertEqual(t.tags, ["@tag"])
+        assert t.tags == ["@tag"]
 
         t.description = "This is a @tag and @another"
-        self.assertEqual(t.tags, ["@tag", "@another"])
+        assert t.tags == ["@tag", "@another"]
 
         t.description = "This is a tag"
-        self.assertEqual(t.tags, [])
+        assert t.tags == []
 
     def test_urgency(self):
         t = self.default_workspace.add_todo()
@@ -189,7 +178,6 @@ class TestTodo(CoreTestBase):
         t.increase_urgency()
         t.increase_urgency()
         t.increase_urgency()
-
         assert t.urgency == 4
 
     def test_recurrence_change(self):
@@ -197,14 +185,12 @@ class TestTodo(CoreTestBase):
         t.due = datetime.strptime("2021-01-01", "%Y-%m-%d")
         t.recurrence = timedelta(days=1)
         t.save()
-
         assert t.due == datetime.strptime("2021-01-01", "%Y-%m-%d")
         t.toggle_complete()
         assert t.due == datetime.strptime("2021-01-02", "%Y-%m-%d")
 
     def test_sort_invalid(self):
         t = self.default_workspace.add_todo()
-
         with raises(AttributeError):
             t.sort_siblings("???????")
 
@@ -212,47 +198,39 @@ class TestTodo(CoreTestBase):
         from tests.generate_test_data import generate
 
         generate(self.session)
-
         w = Workspace.all()[2]
         t = w.todos[0]
-
         old_todos = t.siblings
         t.sort_siblings(field)
         new_descriptions = t.siblings
-
         return old_todos, new_descriptions
 
-    def test_sort_pending(self):
-        old, new = self._sort_before_and_after("pending")
-        old.sort(key=lambda x: (not x.pending, x.due or datetime.max, x.order_index))
-        self.assertEqual([i.id for i in old], [i.id for i in new])
+    @mark.parametrize(
+        "field,sort_key,filter_func,compare_ids",
+        [
+            (
+                "pending",
+                lambda x: (not x.pending, x.due or datetime.max, x.order_index),
+                None,
+                True,
+            ),
+            ("description", lambda x: x.description, None, False),
+            ("recurrence", lambda x: x.recurrence, lambda x: x.recurrence, False),
+            ("effort", lambda x: x.effort, None, False),
+            ("urgency", lambda x: x.urgency, None, False),
+            ("due", lambda x: x.due, lambda x: x.due, True),
+        ],
+    )
+    def test_sort(self, field, sort_key, filter_func, compare_ids):
+        old, new = self._sort_before_and_after(field)
 
-    def test_sort_description(self):
-        old, new = self._sort_before_and_after("description")
-        old.sort(key=lambda x: x.description)
+        if filter_func:
+            old = [t for t in old if filter_func(t)]
+            new = new[: len(old)]
 
-        self.assertEqual(old, new)
+        old.sort(key=sort_key)
 
-    def test_sort_recurrence(self):
-        old, new = self._sort_before_and_after("recurrence")
-        has_recurrence = [t for t in old if t.recurrence]
-
-        has_recurrence.sort(key=lambda x: x.recurrence)
-        self.assertEqual(has_recurrence, new[: len(has_recurrence)])
-
-    def test_sort_effort(self):
-        old, new = self._sort_before_and_after("effort")
-        old.sort(key=lambda x: x.effort)
-        self.assertEqual(old, new)
-
-    def test_sort_urgency(self):
-        old, new = self._sort_before_and_after("urgency")
-        old.sort(key=lambda x: x.urgency)
-        self.assertEqual(old, new)
-
-    def test_sort_due(self):
-        old, new = self._sort_before_and_after("due")
-        has_due = [t for t in old if t.due]
-
-        has_due.sort(key=lambda x: x.due)
-        self.assertEqual([i.id for i in has_due], [i.id for i in new[: len(has_due)]])
+        if compare_ids:
+            assert [i.id for i in old] == [i.id for i in new]
+        else:
+            assert old == new

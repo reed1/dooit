@@ -1,22 +1,20 @@
-from unittest import TestCase
-from sqlalchemy.orm import Session
 from dooit.api import manager
+import pytest
 
 TEMP_PATH = ":memory:"
 
 
-class CoreTestBase(TestCase):
-    @classmethod
-    def setUpClass(cls):
+class CoreTestBase:
+    @pytest.fixture(scope="class")
+    def session(self):
         manager.connect(TEMP_PATH)
-
-    def setUp(self):
-        manager.connect(TEMP_PATH)
-
-    def tearDown(self) -> None:
+        yield manager.session
         manager.session.rollback()
         manager.session.close()
 
-    @property
-    def session(self) -> Session:
-        return manager.session
+    @pytest.fixture(autouse=True)
+    def setup_teardown(self, session):
+        self.session = session
+        yield
+        self.session.rollback()
+        self.session.close()

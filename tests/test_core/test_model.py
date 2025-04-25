@@ -8,10 +8,10 @@ class TestModel(CoreTestBase):
     def test_creation_and_deletion(self):
         w = Workspace()
         w.save()
-        self.assertEqual(len(Workspace.all()), 1)
+        assert len(Workspace.all()) == 1
 
         w.drop()
-        self.assertEqual(len(Workspace.all()), 0)
+        assert len(Workspace.all()) == 0
 
     def test_shifts_normal(self):
         for _ in range(5):
@@ -23,16 +23,16 @@ class TestModel(CoreTestBase):
         assert workspace is not None
 
         siblings = workspace.siblings
-        self.assertTrue(workspace.is_first_sibling())
+        assert workspace.is_first_sibling()
 
         workspace.shift_down()
         siblings = workspace.siblings
-        self.assertEqual(siblings[1].id, workspace.id)
+        assert siblings[1].id == workspace.id
 
         workspace.shift_up()
         siblings = workspace.siblings
-        self.assertEqual(siblings[0].id, workspace.id)
-        self.assertTrue(workspace.is_first_sibling())
+        assert siblings[0].id == workspace.id
+        assert workspace.is_first_sibling()
 
     def test_shifts_edge(self):
         for _ in range(5):
@@ -41,8 +41,8 @@ class TestModel(CoreTestBase):
 
         workspaces = Workspace.all()
 
-        self.assertFalse(workspaces[0].shift_up())
-        self.assertFalse(workspaces[-1].shift_down())
+        assert not workspaces[0].shift_up()
+        assert not workspaces[-1].shift_down()
 
     def test_sort_field(self):
         names = ["a", "b", "c", "d", "e"]
@@ -52,9 +52,9 @@ class TestModel(CoreTestBase):
         for i in reversed(workspaces):
             i.save()
 
-        self.assertEqual([i.description for i in w.siblings], names[::-1])
+        assert [i.description for i in w.siblings] == names[::-1]
         w.sort_siblings("description")
-        self.assertEqual([i.description for i in w.siblings], names)
+        assert [i.description for i in w.siblings] == names
 
     def test_sort_reverse(self):
         names = ["a", "b", "c", "d", "e"]
@@ -64,6 +64,6 @@ class TestModel(CoreTestBase):
         for i in reversed(workspaces):
             i.save()
 
-        self.assertEqual([i.description for i in w.siblings], names[::-1])
+        assert [i.description for i in w.siblings] == names[::-1]
         w.reverse_siblings()
-        self.assertEqual([i.description for i in w.siblings], names)
+        assert [i.description for i in w.siblings] == names
