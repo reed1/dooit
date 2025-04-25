@@ -1,7 +1,7 @@
 import faker
 from datetime import timedelta
 from random import randint
-from dooit.api import Todo, Workspace, manager
+from dooit.api import Todo, Workspace
 from dooit.utils.database import delete_all_data
 
 
@@ -52,13 +52,8 @@ def gen_workspace(parent=None):
     return workspace
 
 
-def generate(test=True):
-    if test:
-        manager.connect("sqlite:///:memory:")
-    else:
-        manager.connect()  # pragma: no cover (not called in tests)
-
-    delete_all_data(manager.session)
+def generate(session, test=True):
+    delete_all_data(session)
 
     w1 = gen_workspace()
     w1_childs = [gen_workspace(w1) for _ in range(5)]

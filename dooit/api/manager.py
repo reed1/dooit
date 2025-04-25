@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_CONN_STRING
+from ._vars import DATABASE_FILE
 
 
 class Manager:
@@ -10,31 +10,21 @@ class Manager:
     Class for managing sqlalchemy sessions
     """
 
-    def connect_from_path(self, path: Optional[str] = None):
+    def connect(self, path: Optional[str] = None):
         """
         Connect to database using a file path
 
         Args:
             path: Path to SQLite database file. Can include ~ for home directory.
         """
-        if not path:
-            return self.connect()
 
-        # XXX: Do a better job
-        if path != ":memory:":
-            path = os.path.expanduser(path)
-
-        conn_string = f"sqlite:///{path}"
-        self.connect(conn_string)
-
-    def connect(self, conn: Optional[str] = None):
         from dooit.api import BaseModel
 
-        conn = conn or DATABASE_CONN_STRING
-
-        self.engine = create_engine(conn)
+        path = path or DATABASE_FILE
+        path = os.path.expanduser(path)
+        connection_string = f"sqlite:///{path}"
+        self.engine = create_engine(connection_string)
         self.session = Session(self.engine)
-        # self.session.autoflush = False
 
         BaseModel.metadata.create_all(bind=self.engine)
         self._db_last_modified = self._get_db_last_modified()

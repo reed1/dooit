@@ -42,7 +42,7 @@ class Dooit(App):
         super().__init__(watch_css=True)
         self.dooit_mode: ModeType = "NORMAL"
         self.config = config
-        manager.connect_from_path(db_path)
+        manager.connect(db_path)
 
     async def base_setup(self):
         self.api = DooitAPI(self)

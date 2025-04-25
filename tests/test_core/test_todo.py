@@ -211,7 +211,7 @@ class TestTodo(CoreTestBase):
     def _sort_before_and_after(self, field) -> Tuple[List[Todo], List[Todo]]:
         from tests.generate_test_data import generate
 
-        generate()
+        generate(self.session)
 
         w = Workspace.all()[2]
         t = w.todos[0]
