@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - vars `always_expand_workspaces` and `always_expand_todos`
-- Support for latest textual (#229)
+- Support for latest textual (#229, #231, #232)
 - Add support for using custom database for todos (#224)
 
 ### Fixed
