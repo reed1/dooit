@@ -29,8 +29,8 @@ def run_dooit(config: Optional[str] = None, db_path: Optional[str] = None):
     is_flag=True,
     help="Show version and exit.",
 )
-@click.option("-c", "--config", default=None, help="Path to config file.")
-@click.option("--db", default=None, help="Database path")
+@click.option("-c", "--config", default=None, help="Path to config file")
+@click.option("--db", default=None, help="Path to database file")
 @click.pass_context
 def main(ctx, version: bool, config: str, db: str) -> None:
     if version:
