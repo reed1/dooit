@@ -172,8 +172,8 @@ class Input:
         elif key == "space":
             self._insert_text(" ")
 
-        elif key.startswith("events.Paste:"):
-            self._insert_text(key[13:])
+        elif key.startswith("events.Paste:") or key.startswith("ctrl+v"):
+            self._insert_text(pyperclip.paste())
 
         elif len(key) == 1:
             self._insert_text(key)

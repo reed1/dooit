@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from textual.widgets import ContentSwitcher
 from dooit.ui.api.events import BarNotification, NotificationType
 from dooit.ui.api.plug import PluginManager
 from .events import DooitEvent, SwitchTab, QuitApp
@@ -144,6 +145,14 @@ class DooitAPI:
         """Add a sibling to highlighted item"""
         self.focused.add_sibling()
 
+    def add_sibling_from_clipboard(self):
+        """Add a sibling to highlighted item and set its description from clipboard"""
+        self.focused.add_sibling_from_clipboard()
+
+    def add_sibling_before(self):
+        """Add a sibling before the highlighted item"""
+        self.focused.add_sibling_before()
+
     def toggle_expand(self):
         """Toggle the expansion of the highlighted item"""
         self.focused.toggle_expand()
@@ -160,6 +169,11 @@ class DooitAPI:
         """Remove the highlighted item"""
         self.focused.remove_node()
 
+    def copy_and_remove_node(self):
+        """Copy node description and remove the node"""
+        self.focused.copy_description_to_clipboard()
+        self.focused.remove_node()
+
     def start_search(self):
         """Start a search within the list"""
         self.focused.start_search()
@@ -172,6 +186,20 @@ class DooitAPI:
         """Toggle the completion of the todo"""
         if isinstance(self.focused, TodosTree):
             self.focused.toggle_complete()
+
+    def add_task_at_bottom(self):
+        """Add a new task at the bottom of the list. If focus is not on TodosTree, switch to it first."""
+        if not isinstance(self.focused, TodosTree):
+            todo_switcher = self.app.query_one("#todo_switcher", expect_type=ContentSwitcher)
+            if todo_switcher.visible_content and isinstance(todo_switcher.visible_content, TodosTree):
+                self.app.set_focus(todo_switcher.visible_content)
+            else:
+                return
+        if self.focused.option_count == 0:
+            self.focused.add_first_item()
+        else:
+            self.focused.action_last()
+            self.focused.add_sibling()
 
     def increase_urgency(self):
         """Increase the urgency of the todo"""

@@ -1,8 +1,9 @@
+import os
 from pathlib import Path
 from platformdirs import user_data_dir
 
-ROOT_FOLDER = Path(user_data_dir("dooit"))
-DATABASE_FILE = ROOT_FOLDER / "dooit.db"
-DATABASE_CONN_STRING = f"sqlite:///{DATABASE_FILE}"
+if 'DATABASE_CONN_STRING' not in os.environ:
+    raise Exception("DATABASE_CONN_STRING environment variable is not set")
 
-DATABASE_FILE.parent.mkdir(parents=True, exist_ok=True)
+DATABASE_CONN_STRING = os.environ['DATABASE_CONN_STRING']
+WORKSPACES_TITLE = os.environ.get('WORKSPACES_TITLE', 'Workspaces')

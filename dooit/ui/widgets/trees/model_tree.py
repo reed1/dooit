@@ -20,6 +20,7 @@ from ._decorators import (
     require_highlighted_node,
     require_confirmation,
 )
+import pyperclip
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.api_components.formatters._model_formatter_base import (
@@ -201,7 +202,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     async def handle_keypress(self, key: str) -> bool:
         if self.is_editing:
-            if key == "escape":
+            if key == "escape" or key == "enter":
                 self.stop_edit()
             else:
                 self.current.handle_keypress(key)
@@ -293,6 +294,14 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         return node
 
     @refresh_tree
+    def _add_sibling_node_before(self) -> ModelType:
+        node = self._create_sibling_node()
+        node.description = ""
+        node.save()
+        node.shift_up()
+        return node
+
+    @refresh_tree
     def add_first_item(self) -> ModelType:
         return self._add_first_item()
 
@@ -310,6 +319,27 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
         self.highlight_id(node.uuid)
         self.start_edit("description")
+
+    def add_sibling_before(self):
+        if self.is_editing:
+            return
+
+        if not self._options:
+            node = self.add_first_item()
+        else:
+            node = self._add_sibling_node_before()
+
+        self.highlight_id(node.uuid)
+        self.start_edit("description")
+
+    @refresh_tree
+    def add_sibling_from_clipboard(self):
+        if not self._options:
+            node = self._add_first_item()
+        else:
+            node = self._create_sibling_node()
+        node.description = pyperclip.paste() or ""
+        node.save()
 
     @require_confirmation
     @refresh_tree
