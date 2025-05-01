@@ -2,8 +2,7 @@ import os
 from typing import Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_FILE
-
+from ._vars import DATABASE_CONN_STRING
 
 class Manager:
     """
@@ -20,10 +19,7 @@ class Manager:
 
         from dooit.api import BaseModel
 
-        path = path or DATABASE_FILE
-        path = os.path.expanduser(path)
-        connection_string = f"sqlite:///{path}"
-        self.engine = create_engine(connection_string)
+        self.engine = create_engine(DATABASE_CONN_STRING)
         self.session = Session(self.engine)
 
         BaseModel.metadata.create_all(bind=self.engine)
