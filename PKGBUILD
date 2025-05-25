@@ -21,8 +21,6 @@ prepare() {
     pip install poetry
     # Install dependencies with verbose output
     poetry install --only main --no-interaction --no-ansi -v
-    # Verify installed packages
-    pip list
 }
 
 build() {

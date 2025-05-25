@@ -1,3 +1,0 @@
-#!/bin/sh
-
-env PROJECT_ID='.dotfiles' WORKSPACES_TITLE='.dotfiles' DATABASE_CONN_STRING='postgresql://wfpidn:1@rdsing:5432/dooit?options=-csearch_path%3Dt__dotfiles' poetry run python -m dooit

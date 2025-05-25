@@ -190,11 +190,9 @@ class DooitAPI:
     def add_task_at_bottom(self):
         """Add a new task at the bottom of the list. If focus is not on TodosTree, switch to it first."""
         if not isinstance(self.focused, TodosTree):
-            todo_switcher = self.app.query_one("#todo_switcher", expect_type=ContentSwitcher)
-            if todo_switcher.visible_content and isinstance(todo_switcher.visible_content, TodosTree):
-                self.app.set_focus(todo_switcher.visible_content)
-            else:
-                return
+            self.app.action_focus_next()
+        if not isinstance(self.focused, TodosTree):
+            return
         if self.focused.option_count == 0:
             self.focused.add_first_item()
         else:
