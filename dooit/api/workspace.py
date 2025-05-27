@@ -55,7 +55,7 @@ class Workspace(DooitModel):
     @classmethod
     def from_id(cls, _id: str) -> "Workspace":
         _id = _id.lstrip("Workspace_")
-        query = select(Workspace).where(Workspace.id == _id)
+        query = select(Workspace).where(Workspace.id == int(_id))
         res = manager.session.execute(query).scalars().first()
         assert res is not None
         return res
