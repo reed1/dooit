@@ -18,7 +18,7 @@ in
       owner = "dooit-org";
       repo = "dooit";
       rev = "refs/tags/v${version}";
-      hash = "sha256-OKQZmK9wThyAPiiS5S4y5MB7X8Hv5igZAXGkVV2kJVs=";
+      hash = "sha256-2W3iO4AOuDdDKJDMMY8YKXlI+dQKRI3PQtkdi9J3wZo=";
     };
 
     build-system = with python3.pkgs; [poetry-core];
