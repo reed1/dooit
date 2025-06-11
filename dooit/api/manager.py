@@ -1,8 +1,9 @@
 import os
 from typing import Optional
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_CONN_STRING
+from ._vars import DATABASE_CONN_STRING, DATABASE_SCHEMA
+
 
 class Manager:
     """
@@ -22,7 +23,13 @@ class Manager:
         self.engine = create_engine(DATABASE_CONN_STRING)
         self.session = Session(self.engine)
 
+        inspector = inspect(self.engine)
+        existing_tables = inspector.get_table_names()
+        has_todo_table_initially = "todo" in existing_tables
+
         BaseModel.metadata.create_all(bind=self.engine)
+        if not has_todo_table_initially:
+            self.create_triggers()
         self._db_last_modified = self._get_db_last_modified()
 
     def _get_db_last_modified(self) -> Optional[float]:
@@ -53,6 +60,20 @@ class Manager:
     def commit(self):
         self.session.commit()
         self._db_last_modified = self._get_db_last_modified()
+
+    def create_triggers(self):
+        schema_name = DATABASE_SCHEMA
+        for table_name in ["todo", "workspace"]:
+            self.session.execute(
+                text(
+                    f"""
+            CREATE TRIGGER trg_log_crud_{schema_name}_{table_name}
+            AFTER INSERT OR UPDATE OR DELETE ON {schema_name}.{table_name}
+            FOR EACH ROW
+            EXECUTE FUNCTION public.log_crud_operation();
+            """
+                )
+            )
 
 
 manager = Manager()

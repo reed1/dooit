@@ -6,4 +6,5 @@ if 'DATABASE_CONN_STRING' not in os.environ:
     raise Exception("DATABASE_CONN_STRING environment variable is not set")
 
 DATABASE_CONN_STRING = os.environ['DATABASE_CONN_STRING']
-WORKSPACES_TITLE = os.environ.get('WORKSPACES_TITLE', 'Workspaces')
+DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
+PROJECT_ID = os.environ['PROJECT_ID']

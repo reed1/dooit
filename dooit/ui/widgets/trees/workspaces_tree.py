@@ -3,7 +3,7 @@ from textual import on
 from textual.widgets.option_list import Option
 
 from dooit.api import Workspace
-from dooit.api._vars import WORKSPACES_TITLE
+from dooit.api._vars import PROJECT_ID
 from dooit.ui.api.events import (
     WorkspaceRemoved,
     WorkspaceSelected,
@@ -19,7 +19,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
-    BORDER_TITLE = WORKSPACES_TITLE
+    BORDER_TITLE = PROJECT_ID
 
     def __init__(self, model: Workspace) -> None:
         render_dict = WorkspaceRenderDict(self)
