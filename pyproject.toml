@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dooit"
-version = "3.1.0"
+version = "3.2.3"
 description = "A TUI Todo Manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
@@ -14,7 +14,7 @@ exclude = ["imgs"]
 python = "^3.9"
 pyyaml = "^6.0.2"
 tzlocal = "^5.2"
-textual = "^3.1.0"
+textual = "^3.2.0"
 python-dateutil = "^2.9.0.post0"
 sqlalchemy = "^2.0.36"
 platformdirs = "^4.3.6"
@@ -47,10 +47,7 @@ testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff.lint]
-ignore=["E712"]
+ignore = ["E712"]
 
 [tool.coverage.report]
-omit = [
-    "nix/store/*",
-    "dooit/utils/default_config.py"
-]
+omit = ["nix/store/*", "dooit/utils/default_config.py"]
