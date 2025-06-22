@@ -66,14 +66,9 @@ class Manager:
         for table_name in ["todo", "workspace"]:
             self.session.execute(
                 text(
-                    f"""
-            CREATE TRIGGER trg_log_crud_{schema_name}_{table_name}
-            AFTER INSERT OR UPDATE OR DELETE ON {schema_name}.{table_name}
-            FOR EACH ROW
-            EXECUTE FUNCTION public.log_crud_operation();
-            """
-                )
+                    "CALL public.register_crud_trigger(:schema_name, :table_name);"
+                ),
+                {"schema_name": schema_name, "table_name": table_name}
             )
-
 
 manager = Manager()
