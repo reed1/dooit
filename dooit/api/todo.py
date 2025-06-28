@@ -163,9 +163,11 @@ class Todo(DooitModel):
         """
         Move this todo to the DELAY workspace (creates it if it doesn't exist)
         """
+        from .workspace import Workspace
 
         delay_workspace = Workspace.get_delay_workspace()
         self.move_to_workspace(delay_workspace)
+        manager.session.expire(delay_workspace)
 
     # ----------- HELPER FUNCTIONS --------------
 

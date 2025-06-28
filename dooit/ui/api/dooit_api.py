@@ -221,6 +221,9 @@ class DooitAPI:
         todo.move_to_delay_workspace()
         self.focused.force_refresh()
 
+    def force_refresh(self):
+        """Force a refresh of the focused tree"""
+        self.focused.force_refresh()
 
     def show_help(self):
         """Show the help screen"""
