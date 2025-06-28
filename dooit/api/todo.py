@@ -6,7 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from .model import DooitModel
 from .manager import manager
 
-
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
 
@@ -141,6 +140,32 @@ class Todo(DooitModel):
         )
         todo.save()
         return todo
+
+    def move_to_workspace(self, target_workspace: "Workspace") -> None:
+        """
+        Move this todo to the specified workspace
+
+        Args:
+            target_workspace: The workspace that will become the new parent
+        """
+        if target_workspace is None:
+            raise ValueError("Target workspace cannot be None")
+
+        # Set new parent workspace and clear parent todo (if it was a subtodo)
+        self.parent_workspace = target_workspace
+        self.parent_todo = None
+
+        # Set order_index to append at the end of the new workspace's todos
+        self.order_index = len(target_workspace.todos)
+        self.save()
+
+    def move_to_delay_workspace(self) -> None:
+        """
+        Move this todo to the DELAY workspace (creates it if it doesn't exist)
+        """
+
+        delay_workspace = Workspace.get_delay_workspace()
+        self.move_to_workspace(delay_workspace)
 
     # ----------- HELPER FUNCTIONS --------------
 

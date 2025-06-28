@@ -121,3 +121,26 @@ class Workspace(DooitModel):
     def all(cls) -> List["Workspace"]:
         query = select(Workspace).where(Workspace.is_root == False)
         return list(manager.session.execute(query).scalars().all())
+
+    @classmethod
+    def get_delay_workspace(cls) -> "Workspace":
+        """
+        Get or create a root-level workspace with the name 'DELAY'
+
+        Returns:
+            The DELAY workspace (existing or newly created)
+        """
+        root = cls._get_or_create_root()
+
+        # Look for existing DELAY workspace at root level
+        for workspace in root.workspaces:
+            if workspace.description == "DELAY":
+                return workspace
+
+        # Create new DELAY workspace if not found
+        delay_workspace = Workspace(
+            description="DELAY",
+            parent_workspace=root
+        )
+        delay_workspace.save()
+        return delay_workspace

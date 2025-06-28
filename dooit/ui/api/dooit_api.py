@@ -209,6 +209,19 @@ class DooitAPI:
         if isinstance(self.focused, TodosTree):
             self.focused.decrease_urgency()
 
+    def move_to_delay_workspace(self):
+        """Move the highlighted todo to the DELAY workspace"""
+        if not isinstance(self.focused, TodosTree):
+            raise ValueError("Must be focusing on a todo to move to delay workspace")
+
+        if self.focused.highlighted is None:
+            raise ValueError("No todo is currently highlighted")
+
+        todo = self.focused.current_model
+        todo.move_to_delay_workspace()
+        self.focused.force_refresh()
+
+
     def show_help(self):
         """Show the help screen"""
         self.focused.show_help()
