@@ -144,9 +144,7 @@ class Todo(DooitModel):
     def move_to_workspace(self, target_workspace: "Workspace") -> None:
         """
         Move this todo to the specified workspace
-
-        Args:
-            target_workspace: The workspace that will become the new parent
+        FIXME: After call, call `api.force_refresh` is still needed to refresh the workspace tree
         """
         if target_workspace is None:
             raise ValueError("Target workspace cannot be None")
@@ -162,12 +160,12 @@ class Todo(DooitModel):
     def move_to_delay_workspace(self) -> None:
         """
         Move this todo to the DELAY workspace (creates it if it doesn't exist)
+        FIXME: After call, call `api.force_refresh` is still needed to refresh the workspace tree
         """
         from .workspace import Workspace
 
         delay_workspace = Workspace.get_delay_workspace()
         self.move_to_workspace(delay_workspace)
-        manager.session.expire(delay_workspace)
 
     # ----------- HELPER FUNCTIONS --------------
 
