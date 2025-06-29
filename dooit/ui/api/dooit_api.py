@@ -220,6 +220,7 @@ class DooitAPI:
         todo = self.focused.current_model
         todo.move_to_delay_workspace()
         self.focused.force_refresh()
+        self.notify("Todo moved to DELAY workspace", "info")
 
     def force_refresh(self):
         """Force a refresh of the focused tree"""
