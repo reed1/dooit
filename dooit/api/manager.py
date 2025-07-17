@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_CONN_STRING, DATABASE_SCHEMA
+from ._vars import DATABASE_CONN_STRING
 
 
 class Manager:
@@ -28,8 +28,6 @@ class Manager:
         has_todo_table_initially = "todo" in existing_tables
 
         BaseModel.metadata.create_all(bind=self.engine)
-        if not has_todo_table_initially:
-            self.create_triggers()
         self._db_last_modified = self._get_db_last_modified()
 
     def _get_db_last_modified(self) -> Optional[float]:
@@ -61,14 +59,5 @@ class Manager:
         self.session.commit()
         self._db_last_modified = self._get_db_last_modified()
 
-    def create_triggers(self):
-        schema_name = DATABASE_SCHEMA
-        for table_name in ["todo", "workspace"]:
-            self.session.execute(
-                text(
-                    "CALL public.register_crud_trigger(:schema_name, :table_name);"
-                ),
-                {"schema_name": schema_name, "table_name": table_name}
-            )
 
 manager = Manager()
