@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_CONN_STRING
+from ._vars import DATABASE_CONN_STRING, LIBSQL_SYNC_URL, LIBSQL_AUTH_TOKEN
 
 
 class Manager:
@@ -19,13 +19,14 @@ class Manager:
         """
 
         from dooit.api import BaseModel
-
-        self.engine = create_engine(DATABASE_CONN_STRING)
+        self.engine = create_engine(
+            DATABASE_CONN_STRING,
+            connect_args={
+                "auth_token": LIBSQL_AUTH_TOKEN,
+                "sync_url": LIBSQL_SYNC_URL,
+            },
+        )
         self.session = Session(self.engine)
-
-        inspector = inspect(self.engine)
-        existing_tables = inspector.get_table_names()
-        has_todo_table_initially = "todo" in existing_tables
 
         BaseModel.metadata.create_all(bind=self.engine)
         self._db_last_modified = self._get_db_last_modified()

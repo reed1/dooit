@@ -1,4 +1,5 @@
 from typing import List, Optional, Union
+import os
 from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..api.todo import Todo
@@ -21,7 +22,7 @@ class Workspace(DooitModel):
     # --------------------------------------------------------------
 
     parent_workspace_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("workspace.id"), default=None
+        ForeignKey(f"dooit_{os.getenv('PROJECT_ID', 'default')}_workspace.id", use_alter=True, name="fk_parent_workspace"), default=None
     )
     parent_workspace: Mapped[Optional["Workspace"]] = relationship(
         "Workspace",

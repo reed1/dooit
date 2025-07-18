@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
+import os
 from sqlalchemy import ForeignKey, select, nulls_last
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from .model import DooitModel
@@ -26,14 +27,16 @@ class Todo(DooitModel):
     # --------------------------------------------------------------
 
     parent_workspace_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("workspace.id")
+        ForeignKey(f"dooit_{os.getenv('PROJECT_ID', 'default')}_workspace.id")
     )
     parent_workspace: Mapped[Optional["Workspace"]] = relationship(
         "Workspace",
         back_populates="todos",
     )
 
-    parent_todo_id: Mapped[Optional[int]] = mapped_column(ForeignKey("todo.id"))
+    parent_todo_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey(f"dooit_{os.getenv('PROJECT_ID', 'default')}_todo.id", use_alter=True, name="fk_parent_todo")
+    )
     parent_todo: Mapped[Optional["Todo"]] = relationship(
         "Todo",
         back_populates="todos",

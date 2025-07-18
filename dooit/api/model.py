@@ -1,4 +1,5 @@
 import uuid
+import os
 from typing import Any, List, Literal, TypeVar
 from typing_extensions import Self
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -18,7 +19,9 @@ class BaseModel(DeclarativeBase):
 class BaseModelMixin:
     @declared_attr
     def __tablename__(cls):
-        return cls.__name__.lower()
+        project_id = os.getenv('PROJECT_ID', 'default')
+        table_name = cls.__name__.lower()
+        return f"dooit_{project_id}_{table_name}"
 
 
 def generate_unique_id():

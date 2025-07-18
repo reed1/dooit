@@ -14,8 +14,8 @@ def fix_order_id_workspace(_, connection, target: Workspace):
 
     if target.order_index >= 0:
         connection.execute(
-            text("""
-            UPDATE workspace
+            text(f"""
+            UPDATE {Workspace.__table__.name}
             SET order_index = order_index + 1
             WHERE order_index >= :current_index
             """),
@@ -30,8 +30,8 @@ def fix_order_id_todo(_, connection, target: Todo):
 
     if target.order_index >= 0:
         connection.execute(
-            text("""
-            UPDATE todo
+            text(f"""
+            UPDATE {Todo.__table__.name}
             SET order_index = order_index + 1
             WHERE order_index >= :current_index
             """),
