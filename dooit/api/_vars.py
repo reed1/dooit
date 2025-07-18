@@ -7,3 +7,6 @@ if 'DATABASE_CONN_STRING' not in os.environ:
 
 DATABASE_CONN_STRING = os.environ['DATABASE_CONN_STRING']
 PROJECT_ID = os.environ['PROJECT_ID']
+LIBSQL_SYNC_URL = os.environ['LIBSQL_SYNC_URL']
+LIBSQL_AUTH_TOKEN = os.environ['LIBSQL_AUTH_TOKEN']
+
