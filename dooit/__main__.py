@@ -31,10 +31,14 @@ def run_dooit(config: Optional[str] = None, db_path: Optional[str] = None):
 )
 @click.option("-c", "--config", default=None, help="Path to config file")
 @click.option("--db", default=None, help="Path to database file")
+@click.option("--init-db", is_flag=True, help="Initialize database and exit.")
 @click.pass_context
-def main(ctx, version: bool, config: str, db: str) -> None:
+def main(ctx, version: bool, config: str, db: str, init_db: bool) -> None:
     if version:
         return print(f"dooit - {VERSION}")
+
+    if init_db:
+        return _init_db(db)
 
     if ctx.invoked_subcommand is None:
         if OLD_CONFIG.exists():
@@ -64,6 +68,17 @@ def migrate() -> None:
 def config_loc() -> None:
     """Print the location of the configuration file."""
     print(Path(user_config_dir("dooit")) / "config.py")
+
+
+def _init_db(db: Optional[str] = None) -> None:
+    from dooit.api import manager, BaseModel
+    from dooit.utils.cli_logger import logger
+
+    logger.info("Initializing database...")
+    manager.connect(db)
+    BaseModel.metadata.create_all(bind=manager.engine)
+    logger.info("Database initialized successfully.")
+    logger.info(f"Tables created: {', '.join(BaseModel.metadata.tables.keys())}")
 
 
 if __name__ == "__main__":
