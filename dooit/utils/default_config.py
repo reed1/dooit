@@ -139,6 +139,8 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("A", api.add_child_node)
     api.keys.set("J", api.shift_down)
     api.keys.set("K", api.shift_up)
+    api.keys.set("T", api.move_to_top)
+    api.keys.set("B", api.move_to_bottom)
     api.keys.set("xx", api.remove_node)
     api.keys.set("y", api.copy_description_to_clipboard)
     api.keys.set("c", api.toggle_complete)

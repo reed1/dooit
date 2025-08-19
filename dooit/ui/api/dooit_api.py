@@ -229,3 +229,29 @@ class DooitAPI:
     def show_help(self):
         """Show the help screen"""
         self.focused.show_help()
+
+    def move_to_top(self):
+        """Move the selected item to the top of its siblings (not applicable for children nodes)"""
+        # Check if the current item is a child node and exclude it
+        if isinstance(self.focused, TodosTree):
+            current_todo = self.focused.current_model
+            if (
+                hasattr(current_todo, "parent_todo")
+                and current_todo.parent_todo is not None
+            ):
+                return  # Skip for child nodes
+
+        self.focused.move_to_top()
+
+    def move_to_bottom(self):
+        """Move the selected item to the bottom of its siblings (not applicable for children nodes)"""
+        # Check if the current item is a child node and exclude it
+        if isinstance(self.focused, TodosTree):
+            current_todo = self.focused.current_model
+            if (
+                hasattr(current_todo, "parent_todo")
+                and current_todo.parent_todo is not None
+            ):
+                return  # Skip for child nodes
+
+        self.focused.move_to_bottom()

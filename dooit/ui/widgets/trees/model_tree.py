@@ -384,6 +384,37 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.current_model.shift_down()
 
     @refresh_tree
+    def move_to_top(self):
+        self.current_model.move_to_top()
+
+    def move_to_bottom(self):
+        if self.highlighted is None:
+            return
+
+        current_model = self.current_model
+        siblings = current_model.siblings
+        current_index = siblings.index(current_model)
+
+        # Find next sibling to highlight after move
+        next_highlight_id = None
+        if current_index < len(siblings) - 1:
+            # Not the last item, select next sibling
+            next_highlight_id = siblings[current_index + 1].uuid
+
+        # Move to bottom
+        success = current_model.move_to_bottom()
+        if success:
+            # Force refresh without preserving highlight
+            self._force_refresh()
+
+            # Highlight the next sibling or stay at same position
+            if next_highlight_id:
+                self.highlight_id(next_highlight_id)
+            else:
+                # Was last item, so now it's still last - highlight it
+                self.highlight_id(current_model.uuid)
+
+    @refresh_tree
     def sort(self, attr: str):
         if attr == "reverse":
             self.current_model.reverse_siblings()

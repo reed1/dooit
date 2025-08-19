@@ -19,7 +19,7 @@ class BaseModel(DeclarativeBase):
 class BaseModelMixin:
     @declared_attr
     def __tablename__(cls):
-        project_id = os.getenv('PROJECT_ID', 'default')
+        project_id = os.getenv("PROJECT_ID", "default")
         table_name = cls.__name__.lower()
         return f"dooit_{project_id}_{table_name}"
 
@@ -147,6 +147,36 @@ class DooitModel(BaseModel, BaseModelMixin):
         self.session.add(siblings[index + 1])
         manager.commit()
 
+        return True
+
+    def move_to_top(self) -> bool:
+        """
+        Move the item to the top among its siblings
+        """
+        if self.is_first_sibling():
+            return False
+
+        siblings = self.siblings
+        min_order = min(sibling.order_index for sibling in siblings)
+        self.order_index = min_order - 1
+
+        self.session.add(self)
+        manager.commit()
+        return True
+
+    def move_to_bottom(self) -> bool:
+        """
+        Move the item to the bottom among its siblings
+        """
+        if self.is_last_sibling():
+            return False
+
+        siblings = self.siblings
+        max_order = max(sibling.order_index for sibling in siblings)
+        self.order_index = max_order + 1
+
+        self.session.add(self)
+        manager.commit()
         return True
 
     def drop(self) -> None:
