@@ -313,7 +313,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         if self.is_editing:
             return
 
-        if not self._options:
+        if not self._options or self.highlighted is None:
+            # When no options exist or nothing is selected, add the first item
             node = self.add_first_item()
         else:
             node = self._add_sibling_node()
