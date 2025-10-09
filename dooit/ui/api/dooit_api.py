@@ -155,7 +155,12 @@ class DooitAPI:
 
     def add_sibling(self):
         """Add a sibling to highlighted item"""
-        self.focused.add_sibling()
+        if self.focused.highlighted is None and self.focused.option_count > 0:
+            # Add to first position if nothing is highlighted
+            self.focused.action_first()
+            self.focused.add_sibling_before()
+        else:
+            self.focused.add_sibling()
 
     def add_sibling_from_clipboard(self):
         """Add a sibling to highlighted item and set its description from clipboard"""
@@ -163,6 +168,8 @@ class DooitAPI:
 
     def add_sibling_before(self):
         """Add a sibling before the highlighted item"""
+        if self.focused.highlighted is None and self.focused.option_count > 0:
+            self.focused.action_first()
         self.focused.add_sibling_before()
 
     def toggle_expand(self):
