@@ -188,10 +188,14 @@ class DooitAPI:
         """Remove the highlighted item"""
         self.focused.remove_node()
 
+    def remove_node_no_confirm(self):
+        """Remove the highlighted item without confirmation"""
+        self.focused.remove_node_no_confirm()
+
     def copy_and_remove_node(self):
         """Copy node description and remove the node"""
         self.focused.copy_description_to_clipboard()
-        self.focused.remove_node()
+        self.focused.remove_node_no_confirm()
 
     def start_search(self):
         """Start a search within the list"""

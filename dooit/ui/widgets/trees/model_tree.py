@@ -373,6 +373,14 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expanded_nodes.pop(model.uuid)
         model.drop()
 
+    @refresh_tree
+    def _remove_node_no_confirm(self):
+        model = self.current_model
+
+        self._renderers.pop(model.uuid)
+        self.expanded_nodes.pop(model.uuid)
+        model.drop()
+
     @require_highlighted_node
     def copy_model_to_clipboard(self):
         node_type = self.current_model.__class__.__name__
@@ -415,6 +423,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     @require_highlighted_node
     def remove_node(self):
         self._remove_node()
+
+    @require_highlighted_node
+    def remove_node_no_confirm(self):
+        self._remove_node_no_confirm()
 
     @refresh_tree
     def shift_up(self) -> None:
