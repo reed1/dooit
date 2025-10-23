@@ -26,6 +26,7 @@ class TodoRegistry(BaseModel):
     __table_args__ = (
         UniqueConstraint('project_id', 'todo_id', name='uq_project_todo'),
         Index('idx_project_workspace', 'project_id', 'workspace_id'),
+        Index('idx_created_at', 'created_at'),
     )
 
 
