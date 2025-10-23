@@ -2,7 +2,7 @@ from .model import DooitModel, BaseModel
 from .todo import Todo
 from .workspace import Workspace
 from .manager import manager
-from .hooks import fix_hooks, validation_hooks, update_hooks
+from .hooks import fix_hooks, validation_hooks, update_hooks, registry_hooks
 
 __all__ = [
     "BaseModel",
@@ -13,4 +13,5 @@ __all__ = [
     "fix_hooks",
     "validation_hooks",
     "update_hooks",
+    "registry_hooks",
 ]

@@ -19,12 +19,16 @@ class Manager:
         """
 
         from dooit.api import BaseModel
+
+        connect_args = {}
+        if LIBSQL_AUTH_TOKEN:
+            connect_args["auth_token"] = LIBSQL_AUTH_TOKEN
+        if LIBSQL_SYNC_URL:
+            connect_args["sync_url"] = LIBSQL_SYNC_URL
+
         self.engine = create_engine(
             DATABASE_CONN_STRING,
-            connect_args={
-                "auth_token": LIBSQL_AUTH_TOKEN,
-                "sync_url": LIBSQL_SYNC_URL,
-            },
+            connect_args=connect_args,
         )
         self.session = Session(self.engine)
 

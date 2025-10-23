@@ -2,13 +2,31 @@ from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
 import os
-from sqlalchemy import ForeignKey, select, nulls_last
+from sqlalchemy import ForeignKey, select, nulls_last, String, Integer, DateTime, UniqueConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
-from .model import DooitModel
+from .model import DooitModel, BaseModel
 from .manager import manager
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
+
+
+class TodoRegistry(BaseModel):
+    __tablename__ = "dooit_todo_registry"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    project_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    workspace_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    todo_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    workspace_name: Mapped[str] = mapped_column(String, default="")
+    todo_name: Mapped[str] = mapped_column(String, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    __table_args__ = (
+        UniqueConstraint('project_id', 'todo_id', name='uq_project_todo'),
+        Index('idx_project_workspace', 'project_id', 'workspace_id'),
+    )
 
 
 class Todo(DooitModel):
