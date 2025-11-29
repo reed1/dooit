@@ -10,6 +10,7 @@
             "request": "launch",
             "envFile": "${workspaceFolder}/.env.test",
             "module": "dooit",
+            "args": ["--config", "/home/reed/.dotfiles/rlocal/app/rdooit/dooit_config.py"],
             "console": "externalTerminal",
         }
     ]

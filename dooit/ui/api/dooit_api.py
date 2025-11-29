@@ -84,6 +84,7 @@ class DooitAPI:
         """Copy the description of the focused item to the clipboard"""
 
         self.focused.copy_description_to_clipboard()
+        self.notify("Copied to clipboard", "info")
 
     def copy_model(self):
         """Copy the current highlighted node to clipboard"""
