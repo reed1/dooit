@@ -179,16 +179,6 @@ class Todo(DooitModel):
         self.order_index = len(target_workspace.todos)
         self.save()
 
-    def move_to_delay_workspace(self) -> None:
-        """
-        Move this todo to the DELAY workspace (creates it if it doesn't exist)
-        FIXME: After call, call `api.force_refresh` is still needed to refresh the workspace tree
-        """
-        from .workspace import Workspace
-
-        delay_workspace = Workspace.get_delay_workspace()
-        self.move_to_workspace(delay_workspace)
-
     # ----------- HELPER FUNCTIONS --------------
 
     def increase_urgency(self) -> None:
@@ -245,7 +235,7 @@ class Todo(DooitModel):
         new_todo.save()
 
         # Clone all child todos recursively
-        for i, child_todo in enumerate(todo.todos):
+        for child_todo in todo.todos:
             attrs = {field: getattr(child_todo, field) for field in fields}
             attrs["parent_todo"] = new_todo
             child_clone = Todo(**attrs)

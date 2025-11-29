@@ -195,26 +195,3 @@ class Workspace(DooitModel):
             # Clone child todos
             for child_todo in todo.todos:
                 Todo._clone_todo_recursively(child_todo, todo_clone)
-
-    @classmethod
-    def get_delay_workspace(cls) -> "Workspace":
-        """
-        Get or create a root-level workspace with the name 'DELAY'
-
-        Returns:
-            The DELAY workspace (existing or newly created)
-        """
-        root = cls._get_or_create_root()
-
-        # Look for existing DELAY workspace at root level
-        for workspace in root.workspaces:
-            if workspace.description == "DELAY":
-                return workspace
-
-        # Create new DELAY workspace if not found
-        delay_workspace = Workspace(
-            description="DELAY",
-            parent_workspace=root
-        )
-        delay_workspace.save()
-        return delay_workspace
