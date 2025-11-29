@@ -233,10 +233,6 @@ class DooitAPI:
         if isinstance(self.focused, TodosTree):
             self.focused.decrease_urgency()
 
-    def force_refresh(self):
-        """Force a refresh of the focused tree"""
-        self.focused.force_refresh()
-
     def show_help(self):
         """Show the help screen"""
         self.focused.show_help()

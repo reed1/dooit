@@ -24,7 +24,6 @@ Global registry table (`dooit_todo_registry`) that tracks todos across all proje
 - `remove_node_no_confirm()` - Delete without confirmation dialog
 - `copy_and_remove_node()` - Copy description then delete
 - `move_to_top()` / `move_to_bottom()` - Reorder items
-- `force_refresh()` - Force tree refresh
 - `add_sibling_before()` - Add sibling above current item
 - `add_sibling_from_clipboard()` - Add sibling with description from clipboard
 - `add_task_at_bottom()` - Add task at end of list
