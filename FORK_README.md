@@ -27,7 +27,7 @@ Global registry table (`dooit_todo_registry`) that tracks todos across all proje
 - `add_sibling_before()` - Add sibling above current item
 - `add_sibling_from_clipboard()` - Add sibling with description from clipboard
 - `add_task_at_bottom()` - Add task at end of list
-- Clipboard notification on copy
+- Add "RECORDING" mode onto enum ModeType
 
 ## Bug Fixes
 
