@@ -8,7 +8,7 @@
             "name": "Python Debug Main",
             "type": "debugpy",
             "request": "launch",
-            "envFile": "${workspaceFolder}/.env.test",
+            "envFile": "${workspaceFolder}/debug_env",
             "module": "dooit",
             "args": ["--config", "/home/reed/.dotfiles/rlocal/app/rdooit/dooit_config.py"],
             "console": "externalTerminal",
