@@ -32,9 +32,6 @@ class Manager:
         )
         self.session = Session(self.engine)
 
-        if LIBSQL_SYNC_URL:
-            self.engine.raw_connection().dbapi_connection.sync()
-
         BaseModel.metadata.create_all(bind=self.engine)
         self._db_last_modified = self._get_db_last_modified()
 
