@@ -6,7 +6,7 @@ Personal fork of [dooit](https://github.com/kraanzu/dooit) with modifications fo
 
 Tables are namespaced per project using `PROJECT_ID` environment variable:
 - Table names: `dooit_{PROJECT_ID}_workspace`, `dooit_{PROJECT_ID}_todo`
-- Requires environment variables: `DATABASE_CONN_STRING`, `PROJECT_ID`, `LIBSQL_SYNC_URL`, `LIBSQL_AUTH_TOKEN`
+- Requires environment variables: `DATABASE_CONN_STRING`, `PROJECT_ID`
 
 ## TodoRegistry
 
