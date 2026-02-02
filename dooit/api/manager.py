@@ -1,8 +1,8 @@
 import os
 from typing import Optional
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from ._vars import DATABASE_CONN_STRING, LIBSQL_SYNC_URL, LIBSQL_AUTH_TOKEN
+from ._vars import DATABASE_CONN_STRING
 
 
 class Manager:
@@ -20,16 +20,7 @@ class Manager:
 
         from dooit.api import BaseModel
 
-        connect_args = {}
-        if LIBSQL_AUTH_TOKEN:
-            connect_args["auth_token"] = LIBSQL_AUTH_TOKEN
-        if LIBSQL_SYNC_URL:
-            connect_args["sync_url"] = LIBSQL_SYNC_URL
-
-        self.engine = create_engine(
-            DATABASE_CONN_STRING,
-            connect_args=connect_args,
-        )
+        self.engine = create_engine(DATABASE_CONN_STRING)
         self.session = Session(self.engine)
 
         BaseModel.metadata.create_all(bind=self.engine)
