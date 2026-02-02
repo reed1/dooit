@@ -27,6 +27,8 @@ class Manager:
         self._db_last_modified = self._get_db_last_modified()
 
     def _get_db_last_modified(self) -> Optional[float]:
+        # Override: we're using libsql database URL, not a file path
+        return None
         database = self.engine.url.database
         assert database is not None
 
