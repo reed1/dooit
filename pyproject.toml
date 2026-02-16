@@ -23,8 +23,6 @@ dependencies = [
     "sqlalchemy>=2.0.43",
     "textual>=6.1.0",
     "tzlocal>=5.3.1",
-    "psutil>=7.0.0",
-    "psycopg>=3.2.9",
     "pyrqlite>=2.2.3",
     "sqlalchemy-rqlite>=2.0",
 ]
